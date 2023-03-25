@@ -11,10 +11,12 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { useReducer } from "react";
 
+import { useReducer } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import { initialValue, loginReducer } from "./reducer/Login";
+
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, resetReduxData } from "../redux/authentication/action";
 
@@ -22,13 +24,14 @@ const backgroundColor = "#38aa8c";
 
 export default function Login() {
   const [state, dispatch] = useReducer(loginReducer, initialValue);
+
   const toast = useToast();
   const Dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { loginLoading, loginSuccess, loginError } = useSelector(
     (store) => store.AuthenticationReducer
   );
-
-  const navigate = useNavigate();
 
   const loginBtn = () => {
     if (!state.email) {
@@ -123,6 +126,7 @@ export default function Login() {
       position: "top-right",
     });
   }
+
   return (
     <Flex
       align={"center"}

@@ -6,11 +6,19 @@ const cors = require("cors");
 
 const { userRouter } = require("./routes/Authentication");
 
+const { sprintRouter } = require("./routes/sprint");
+
+const { taskRouter } = require("./routes/task");
+
 app.use(express.json());
 
 app.use(cors());
 
 app.use("/user", userRouter);
+
+app.use("/sprint", sprintRouter);
+
+app.use("/task", taskRouter);
 
 require("dotenv").config();
 
@@ -26,6 +34,6 @@ app.listen(process.env.port, async () => {
     console.log(`Server started on port ${process.env.port}`);
     console.log("Connect to mongoose server");
   } catch (e) {
-    console.error(e);
+    console.error(e.message);
   }
 });

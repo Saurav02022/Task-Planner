@@ -5,8 +5,9 @@ import Signup from "./pages/Signup";
 
 import Navbar from "./components/navbar";
 import Home from "./pages/Home";
-import Sprint from "./pages/Sprint";
+import Sprint from "./pages/Task";
 import Private from "./PrivateRoute/private";
+import SingleSprint from "./pages/SingleSprint";
 function App() {
   return (
     <div>
@@ -27,6 +28,14 @@ function App() {
           element={
             <Private>
               <Sprint />
+            </Private>
+          }
+        />
+        <Route
+          path="/:sprintName"
+          element={
+            <Private>
+              <SingleSprint />
             </Private>
           }
         />

@@ -8,6 +8,7 @@ const { userModel } = require("../models/userModel");
 
 const userRouter = express.Router();
 
+//register a new user
 userRouter.post("/register", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
@@ -53,6 +54,7 @@ userRouter.post("/register", async (req, res) => {
   }
 });
 
+//login a user
 userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   if (email && password) {
@@ -91,38 +93,13 @@ userRouter.post("/login", async (req, res) => {
   }
 });
 
+//read all userData
 userRouter.get("/", async (req, res) => {
-  const query = req.query._limit;
-  const pages = req.query._page;
   try {
-    const users = await userModel
-      .find()
-      .limit(query)
-      .skip((pages - 1) * query);
+    const users = await userModel.find();
     res.send(users);
   } catch (err) {
     res.send(err.message);
-  }
-});
-
-userRouter.get("/:id", async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    const users = await userModel.find({ _id: id });
-    res.send(users);
-  } catch (err) {
-    res.send(err.message);
-  }
-});
-
-userRouter.delete("/delete/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    await userModel.findByIdAndDelete({ _id: id });
-    res.send("user deleted successfully");
-  } catch (err) {
-    res.send(err);
   }
 });
 

@@ -14,26 +14,31 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { useReducer, useState } from "react";
+
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
+import { useReducer, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
-import { initialValue, SignupReducer } from "./reducer/Signup";
 import { registerUser } from "../redux/authentication/action";
+
+import { initialValue, SignupReducer } from "./reducer/Signup";
 
 const backgroundColor = "#38aa8c";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [state, dispatch] = useReducer(SignupReducer, initialValue);
+
   const toast = useToast();
   const Dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { signupLoading, signupSuccess, signupError } = useSelector(
     (store) => store.AuthenticationReducer
   );
-  const navigate = useNavigate();
+
   if (signupError) {
     toast({
       description: signupError,
@@ -124,6 +129,9 @@ export default function Signup() {
       return;
     }
     Dispatch(registerUser(state));
+    setTimeout(() => {
+      navigate("/login");
+    }, 1500);
   };
 
   if (signupSuccess === "new registration successfully") {
@@ -144,9 +152,6 @@ export default function Signup() {
       isClosable: true,
       position: "top-right",
     });
-    setTimeout(() => {
-      navigate("/login");
-    }, 1500);
   }
 
   return (

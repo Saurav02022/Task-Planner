@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../redux/authentication/action";
 
-const Links = ["Home", "Sprint"];
+const Links = ["Home", "Tasks"];
 
 const backgroundColor = "#38aa8c";
 
