@@ -55,35 +55,37 @@ const SingleSprint = () => {
     }, 1000);
   };
 
-  if (getTaskError) {
-    toast({
-      description: getTaskError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+  useEffect(() => {
+    if (getTaskError) {
+      toast({
+        description: getTaskError,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
 
-  if (deleteError) {
-    toast({
-      description: deleteError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+    if (deleteError) {
+      toast({
+        description: deleteError,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
 
-  if (changeStatusError) {
-    toast({
-      description: changeStatusError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+    if (changeStatusError) {
+      toast({
+        description: changeStatusError,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  }, [getTaskError, deleteError, changeStatusError]);
 
   useEffect(() => {
     dispatch(getTaskDataBySprintName(userid, sprintName));

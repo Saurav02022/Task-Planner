@@ -58,45 +58,31 @@ const Sprint = () => {
     changeStatusError,
   } = useSelector((store) => store.taskReducer);
 
+  const showToast = (description, status) => {
+    toast({
+      description,
+      status,
+      duration: 3000,
+      isClosable: true,
+      position: "top-right",
+    });
+  };
+
   const postTask = () => {
     if (!state.taskType) {
-      toast({
-        description: `Please select the Task Type`,
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Please select the Task Type", "info");
       return;
     }
     if (!state.sprintName) {
-      toast({
-        description: `Please select the sprint Name`,
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Please select the sprint Name", "info");
       return;
     }
     if (!state.task) {
-      toast({
-        description: `Please Enter the task`,
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Please Enter the task", "info");
       return;
     }
     if (!state.statusOfTask) {
-      toast({
-        description: `Please Enter the status Of the Task`,
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Please Enter the status Of the Task", "info");
       return;
     }
 
@@ -116,89 +102,43 @@ const Sprint = () => {
   };
 
   if (createSuccess === "already task exists") {
-    toast({
-      description: createSuccess,
-      status: "info",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
+    showToast(createSuccess, "info");
   }
 
   if (createSuccess === "Sprint Name does not exists") {
-    toast({
-      description: createSuccess,
-      status: "info",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
+    showToast(createSuccess, "info");
   }
 
   if (createSuccess === "new task created successfully") {
-    toast({
-      description: createSuccess,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
+    showToast(createSuccess, "success");
   }
 
   const deleteTask = (id) => {
     dispatch(deletetask(id));
-    toast({
-      description: "task deleted successfully",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
+    showToast("task deleted successfully", "success");
     setTimeout(() => {
       setDataAdd(!dataAdd);
       dispatch(ResetAllSucceess());
     }, 1000);
   };
 
-  if (createError) {
-    toast({
-      description: createError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+  useEffect(() => {
+    if (createError) {
+      showToast(createError, "error");
+    }
 
-  if (getTaskError) {
-    toast({
-      description: getTaskError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+    if (getTaskError) {
+      showToast(getTaskError, "error");
+    }
 
-  if (deleteError) {
-    toast({
-      description: deleteError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+    if (deleteError) {
+      showToast(deleteError, "error");
+    }
 
-  if (changeStatusError) {
-    toast({
-      description: changeStatusError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+    if (changeStatusError) {
+      showToast(changeStatusError, "error");
+    }
+  }, [createError, getTaskError, deleteError, changeStatusError]);
 
   useEffect(() => {
     dispatch(getSprintData(userid));
@@ -212,6 +152,7 @@ const Sprint = () => {
       </Heading>
     );
   }
+
   return (
     <Flex
       justifyContent="center"

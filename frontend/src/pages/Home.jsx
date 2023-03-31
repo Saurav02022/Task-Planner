@@ -70,55 +70,56 @@ const Home = () => {
     setSprintName("");
   };
 
-  if (createSuccess === "already sprint exists") {
-    toast({
-      description: createSuccess,
-      status: "info",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-    dispatch(ResetAllSucceess());
-    onClose();
-  }
+  useEffect(() => {
+    if (createSuccess === "already sprint exists") {
+      toast({
+        description: createSuccess,
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+      dispatch(ResetAllSucceess());
+      onClose();
+    }
 
-  if (createSuccess === "new sprint created successfully") {
-    toast({
-      description: createSuccess,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-    setAddNewSprint(!addNewSprint);
-    dispatch(ResetAllSucceess());
-    onClose();
-  }
+    if (createSuccess === "new sprint created successfully") {
+      toast({
+        description: createSuccess,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+      setAddNewSprint(!addNewSprint);
+      dispatch(ResetAllSucceess());
+      onClose();
+    }
 
-  if (createError) {
-    toast({
-      description: createError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+    if (createError) {
+      toast({
+        description: createError,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
 
-  if (getError) {
-    toast({
-      description: getError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+    if (getError) {
+      toast({
+        description: getError,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  }, [createSuccess, createError, getError]);
 
   useEffect(() => {
     dispatch(getSprintData(userid));
   }, [addNewSprint]);
-
   if (getLoading) {
     return (
       <Heading as="h2" textAlign="center">

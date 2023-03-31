@@ -17,7 +17,7 @@ import {
 
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -39,93 +39,45 @@ export default function Signup() {
     (store) => store.AuthenticationReducer
   );
 
-  if (signupError) {
+  const showToast = (title, description, status) => {
     toast({
-      description: signupError,
-      status: "error",
+      title,
+      description,
+      status,
       duration: 3000,
       isClosable: true,
       position: "top-right",
     });
-  }
+  };
 
   const SignupBtn = () => {
     if (!state.firstName) {
-      toast({
-        title: "first Name",
-        description: "Please Enter Your first Name",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("first Name", "Please Enter Your first Name", "info");
       return;
     }
     if (!state.lastName) {
-      toast({
-        title: "last Name",
-        description: "Please Enter Your last Name",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("last Name", "Please Enter Your last Name", "info");
       return;
     }
 
     if (!state.email) {
-      toast({
-        title: "Email",
-        description: "Please Enter Your Email address",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Email", "Please Enter Your Email address", "info");
       return;
     }
     if (!state.email.includes("@")) {
-      toast({
-        title: "Email",
-        description: "Please Enter Your valid Email address",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Email", "Please Enter a valid Email address", "info");
       return;
     }
     if (state.email.includes("@@") === true) {
-      toast({
-        title: "Email",
-        description: "Please Enter Your valid Email address",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Email", "Please Enter a valid Email address", "info");
       return;
     }
     if (!state.password) {
-      toast({
-        title: "Password",
-        description: "Please Enter the password",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Password", "Please Enter the password", "info");
       return;
     }
     if (state.password.length < 8) {
-      toast({
-        title: "Password",
-        description: "password length should be 8 characters",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Password", "password length should be 8 characters", "info");
       return;
     }
     Dispatch(registerUser(state));
@@ -134,25 +86,35 @@ export default function Signup() {
     }, 1500);
   };
 
-  if (signupSuccess === "new registration successfully") {
-    toast({
-      description: signupSuccess,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
-
-  if (signupSuccess === "already registred user Please Login") {
-    toast({
-      description: signupSuccess,
-      status: "warning",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
+  useEffect(() => {
+    if (signupError) {
+      toast({
+        description: signupError,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+    if (signupSuccess === "new registration successfully") {
+      toast({
+        description: signupSuccess,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+    if (signupSuccess === "already registred user Please Login") {
+      toast({
+        description: signupSuccess,
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  }, [signupError, signupSuccess]);
 
   return (
     <Flex

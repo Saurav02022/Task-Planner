@@ -1,3 +1,5 @@
+/* The above code is a login page for a user to login to the application. */
+/* The above code is a login page for a user to login to the application. */
 import {
   Flex,
   Box,
@@ -23,7 +25,7 @@ import { loginUser, resetReduxData } from "../redux/authentication/action";
 const backgroundColor = "#38aa8c";
 
 export default function Login() {
-  const [state, dispatch] = useReducer(loginReducer, initialValue);
+ const [state, dispatch] = useReducer(loginReducer, initialValue);
 
   const toast = useToast();
   const Dispatch = useDispatch();
@@ -33,7 +35,7 @@ export default function Login() {
     (store) => store.AuthenticationReducer
   );
 
-  const loginBtn = () => {
+const loginBtn = () => {
     if (!state.email) {
       toast({
         title: "Email",
@@ -45,18 +47,7 @@ export default function Login() {
       });
       return;
     }
-    if (!state.email.includes("@")) {
-      toast({
-        title: "Email",
-        description: "Please Enter Your valid Email address",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
-      return;
-    }
-    if (state.email.includes("@@") === true) {
+    if (!state.email.includes("@") || state.email.includes("@@") === true) {
       toast({
         title: "Email",
         description: "Please Enter Your valid Email address",
@@ -80,53 +71,52 @@ export default function Login() {
     }
     Dispatch(loginUser(state));
   };
-
-  if (loginSuccess === "Login successfully") {
-    toast({
-      description: loginSuccess,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-    navigate("/");
+  switch (loginSuccess) {
+    case "Login successfully":
+      toast({
+        description: loginSuccess,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+      navigate("/");
+      break;
+    case "Wrong Password":
+      toast({
+        description: loginSuccess,
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+      break;
+    case "Email Address not found":
+      toast({
+        description: loginSuccess,
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+      navigate("/signup");
+      Dispatch(resetReduxData());
+      break;
+    default:
+      if (loginError) {
+        toast({
+          description: loginError,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      }
   }
-
-  if (loginSuccess === "Wrong Password") {
-    toast({
-      description: loginSuccess,
-      status: "info",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-    setTimeout(() => {
-      window.location.reload();
-    }, 1500);
-  }
-
-  if (loginSuccess === "Email Address not found") {
-    toast({
-      description: loginSuccess,
-      status: "warning",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-    navigate("/signup");
-    Dispatch(resetReduxData());
-  }
-
-  if (loginError) {
-    toast({
-      description: loginError,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  }
-
+  
   return (
     <Flex
       align={"center"}
