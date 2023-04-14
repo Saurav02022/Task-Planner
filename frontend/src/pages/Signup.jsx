@@ -12,7 +12,6 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  useToast,
 } from "@chakra-ui/react";
 
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
@@ -21,34 +20,23 @@ import { useEffect, useReducer, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../redux/authentication/action";
+import { registerUser, resetReduxData } from "../redux/authentication/action";
 
 import { initialValue, SignupReducer } from "./reducer/Signup";
+import useShowToast from "../CustomHooks/UseShowToast";
 
 const backgroundColor = "#38aa8c";
 
 export default function Signup() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [state, dispatch] = useReducer(SignupReducer, initialValue);
-
-  const toast = useToast();
   const Dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showToast] = useShowToast();
+  const [showPassword, setShowPassword] = useState(false);
+  const [state, dispatch] = useReducer(SignupReducer, initialValue);
 
   const { signupLoading, signupSuccess, signupError } = useSelector(
     (store) => store.AuthenticationReducer
   );
-
-  const showToast = (title, description, status) => {
-    toast({
-      title,
-      description,
-      status,
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  };
 
   const SignupBtn = () => {
     if (!state.firstName) {
@@ -82,37 +70,22 @@ export default function Signup() {
     }
     Dispatch(registerUser(state));
     setTimeout(() => {
-      navigate("/login");
-    }, 1500);
+      dispatch({ type: "firstName", payload: "" });
+      dispatch({ type: "lastName", payload: "" });
+      dispatch({ type: "email", payload: "" });
+      dispatch({ type: "password", payload: "" });
+    }, 2000);
   };
 
   useEffect(() => {
     if (signupError) {
-      toast({
-        description: signupError,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("", signupError, "error");
+      Dispatch(resetReduxData());
     }
-    if (signupSuccess === "new registration successfully") {
-      toast({
-        description: signupSuccess,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
-    }
-    if (signupSuccess === "already registred user Please Login") {
-      toast({
-        description: signupSuccess,
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+    if (signupSuccess) {
+      showToast("", signupSuccess, "success");
+      Dispatch(resetReduxData());
+      navigate("/login");
     }
   }, [signupError, signupSuccess]);
 

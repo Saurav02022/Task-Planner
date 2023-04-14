@@ -11,112 +11,86 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  useToast,
 } from "@chakra-ui/react";
 
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { initialValue, loginReducer } from "./reducer/Login";
-
 import { useDispatch, useSelector } from "react-redux";
+import useShowToast from "../CustomHooks/UseShowToast";
+import { initialValue, loginReducer } from "./reducer/Login";
 import { loginUser, resetReduxData } from "../redux/authentication/action";
 
 const backgroundColor = "#38aa8c";
 
 export default function Login() {
- const [state, dispatch] = useReducer(loginReducer, initialValue);
-
-  const toast = useToast();
   const Dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showToast] = useShowToast();
+  const [state, dispatch] = useReducer(loginReducer, initialValue);
 
   const { loginLoading, loginSuccess, loginError } = useSelector(
     (store) => store.AuthenticationReducer
   );
 
-const loginBtn = () => {
+  const loginBtn = () => {
     if (!state.email) {
-      toast({
-        title: "Email",
-        description: "Please Enter Your Email address",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Email is required", "Please enter your email address", "info");
       return;
     }
     if (!state.email.includes("@") || state.email.includes("@@") === true) {
-      toast({
-        title: "Email",
-        description: "Please Enter Your valid Email address",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast(
+        "Please Enter valid email address",
+        "Please enter your email address",
+        "info"
+      );
       return;
     }
     if (!state.password) {
-      toast({
-        title: "Password",
-        description: "Please Enter Your password",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
+      showToast("Password is required", "Please enter your password", "info");
       return;
     }
     Dispatch(loginUser(state));
   };
-  switch (loginSuccess) {
-    case "Login successfully":
-      toast({
-        description: loginSuccess,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
-      navigate("/");
-      break;
-    case "Wrong Password":
-      toast({
-        description: loginSuccess,
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-      break;
-    case "Email Address not found":
-      toast({
-        description: loginSuccess,
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
-      navigate("/signup");
-      Dispatch(resetReduxData());
-      break;
-    default:
-      if (loginError) {
-        toast({
-          description: loginError,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "top-right",
-        });
-      }
-  }
-  
+
+  useEffect(() => {
+    switch (loginSuccess) {
+      case "User not found":
+        showToast(
+          "Your account is not available",
+          "Please signup on our website",
+          "info"
+        );
+        navigate("/signup");
+        Dispatch(resetReduxData());
+        break;
+      case "Please Verify your email address":
+        showToast(
+          "Verify your email address",
+          "Please Verify your email address",
+          "info"
+        );
+        dispatch({ type: "email", payload: "" });
+        dispatch({ type: "password", payload: "" });
+        Dispatch(resetReduxData());
+        break;
+      case "Wrong Password":
+        showToast("Wrong Password", "Please Enter your password", "info");
+        dispatch({ type: "email", payload: "" });
+        dispatch({ type: "password", payload: "" });
+        Dispatch(resetReduxData());
+        break;
+      case "Login successfully":
+        showToast("Login successfully", "", "success");
+        navigate("/");
+        break;
+      default:
+        if (loginError) {
+          showToast("Login error", loginError, "error");
+        }
+    }
+  }, [loginSuccess, loginError]);
+
   return (
     <Flex
       align={"center"}

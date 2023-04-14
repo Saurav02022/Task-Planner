@@ -54,7 +54,7 @@ const AuthenticationReducer = (state = initialState, { type, payload }) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        isAuth: true,
+        isAuth: payload.isAuthenticated,
         loginSuccess: payload.message,
         loginLoading: false,
         token: payload.token,
