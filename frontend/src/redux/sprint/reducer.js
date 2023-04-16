@@ -5,6 +5,9 @@ import {
   sprintGetLoading,
   sprintGetSuccess,
   sprintGetError,
+  sprintDeleteLoading,
+  sprintDeleteSuccess,
+  sprintDeleteError,
 } from "./actionType";
 
 let initialValue = {
@@ -14,6 +17,9 @@ let initialValue = {
   getLoading: false,
   getSuccess: [],
   getError: "",
+  deleteLoading: false,
+  deleteSuccess: "",
+  deleteError: "",
 };
 
 const sprintReducer = (state = initialValue, { type, payload }) => {
@@ -59,6 +65,27 @@ const sprintReducer = (state = initialValue, { type, payload }) => {
         getLoading: false,
         getSuccess: "",
         getError: payload,
+      };
+    }
+    case sprintDeleteLoading: {
+      return {
+        ...state,
+        deleteLoading: true,
+      };
+    }
+    case sprintDeleteSuccess: {
+      return {
+        ...state,
+        deleteLoading: false,
+        deleteSuccess: payload.message,
+      };
+    }
+    case sprintDeleteError: {
+      return {
+        ...state,
+        deleteLoading: false,
+        deleteSuccess: "",
+        deleteError: payload.message,
       };
     }
 

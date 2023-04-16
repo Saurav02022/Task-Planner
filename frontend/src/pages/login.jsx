@@ -1,5 +1,4 @@
 /* The above code is a login page for a user to login to the application. */
-/* The above code is a login page for a user to login to the application. */
 import {
   Flex,
   Box,
@@ -119,6 +118,7 @@ export default function Login() {
                 onChange={(e) =>
                   dispatch({ type: "email", payload: e.target.value })
                 }
+                isDisabled={loginLoading}
               />
             </FormControl>
             <FormControl id="password">
@@ -129,6 +129,7 @@ export default function Login() {
                 onChange={(e) =>
                   dispatch({ type: "password", payload: e.target.value })
                 }
+                isDisabled={loginLoading}
               />
             </FormControl>
             <Stack spacing={10}>

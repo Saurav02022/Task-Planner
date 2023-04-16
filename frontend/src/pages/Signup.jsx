@@ -121,6 +121,7 @@ export default function Signup() {
                     onChange={(e) =>
                       dispatch({ type: "firstName", payload: e.target.value })
                     }
+                    isDisabled={signupLoading}
                   />
                 </FormControl>
               </Box>
@@ -133,6 +134,7 @@ export default function Signup() {
                     onChange={(e) =>
                       dispatch({ type: "lastName", payload: e.target.value })
                     }
+                    isDisabled={signupLoading}
                   />
                 </FormControl>
               </Box>
@@ -145,6 +147,7 @@ export default function Signup() {
                 onChange={(e) =>
                   dispatch({ type: "email", payload: e.target.value })
                 }
+                isDisabled={signupLoading}
               />
             </FormControl>
             <FormControl id="password" isRequired>
@@ -156,6 +159,7 @@ export default function Signup() {
                   onChange={(e) =>
                     dispatch({ type: "password", payload: e.target.value })
                   }
+                  isDisabled={signupLoading}
                 />
                 <InputRightElement h={"full"}>
                   <Button

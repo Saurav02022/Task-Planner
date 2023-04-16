@@ -13,11 +13,6 @@ import {
   useDisclosure,
   Box,
   Input,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Td,
   useToast,
   Heading,
 } from "@chakra-ui/react";
@@ -29,7 +24,7 @@ import {
   getSprintData,
 } from "../redux/sprint/action";
 
-import { Link } from "react-router-dom";
+import Card from "../components/Card";
 
 const backgroundColor = "#38aa8c";
 const Home = () => {
@@ -49,6 +44,9 @@ const Home = () => {
     getLoading,
     getSuccess,
     getError,
+    deleteLoading,
+    deleteSuccess,
+    deleteError,
   } = useSelector((store) => store.sprintReducer);
 
   const createNewSprintBtn = () => {
@@ -115,12 +113,39 @@ const Home = () => {
         position: "top-right",
       });
     }
-  }, [createSuccess, createError, getError]);
+    if (deleteSuccess) {
+      toast({
+        description: deleteSuccess,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+      dispatch(ResetAllSucceess());
+    }
+    if (deleteError) {
+      toast({
+        description: deleteError,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  }, [createSuccess, createError, getError, deleteError, deleteSuccess]);
 
   useEffect(() => {
     dispatch(getSprintData(userid));
-  }, [addNewSprint]);
+  }, [addNewSprint, deleteSuccess]);
+
   if (getLoading) {
+    return (
+      <Heading as="h2" textAlign="center">
+        Loading...
+      </Heading>
+    );
+  }
+  if (deleteLoading) {
     return (
       <Heading as="h2" textAlign="center">
         Loading...
@@ -130,7 +155,13 @@ const Home = () => {
   return (
     <Flex justifyContent="center" flexDirection="column" textAlign="center">
       <Box marginTop="50px">
-        <Button onClick={onOpen}>Create a new Sprint</Button>
+        <Button
+          onClick={onOpen}
+          backgroundColor={backgroundColor}
+          color="white"
+        >
+          Create a new Sprint
+        </Button>
 
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -142,17 +173,23 @@ const Home = () => {
                 placeholder="Sprint Name"
                 value={sprintName}
                 onChange={(e) => setSprintName(e.target.value)}
+                isDisabled={createLoading || createError}
               />
             </ModalBody>
 
             <ModalFooter>
-              <Button backgroundColor={"red"} mr={3} onClick={onClose}>
+              <Button
+                colorScheme="red"
+                mr={3}
+                onClick={onClose}
+                isDisabled={createLoading}
+              >
                 Close
               </Button>
               <Button
                 isLoading={createLoading}
                 loadingText="Loading..."
-                backgroundColor={backgroundColor}
+                colorScheme="green"
                 onClick={createNewSprintBtn}
               >
                 Create a new Sprint
@@ -161,27 +198,34 @@ const Home = () => {
           </ModalContent>
         </Modal>
       </Box>
-      <Table marginTop="50px">
-        <Thead>
-          <Tr>
-            <Td>Sr.no</Td>
-            <Td>Sprint Name</Td>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {getSuccess.length > 0 &&
-            getSuccess.map((item, index) => {
-              return (
-                <Tr key={index}>
-                  <Td>{index + 1}</Td>
-                  <Td>
-                    <Link to={`/${item.sprintName}`}>{item.sprintName}</Link>
-                  </Td>
-                </Tr>
-              );
-            })}
-        </Tbody>
-      </Table>
+
+      <Box
+        display="grid"
+        gridTemplateColumns={{
+          base: "repeat(1,1fr)",
+          sm: "repeat(2,1fr)",
+          md: "repeat(3,1fr)",
+          lg: "repeat(4,1fr)",
+        }}
+        width="90%"
+        gap="10"
+        margin="auto"
+        marginTop="10"
+        marginBottom="10"
+      >
+        {getSuccess.length > 0 &&
+          getSuccess.map((item, index) => {
+            return (
+              <Card
+                sprintName={item.sprintName}
+                creatorId={item.creatorId}
+                key={index}
+                link={item.sprintName}
+                index={index}
+              />
+            );
+          })}
+      </Box>
     </Flex>
   );
 };
