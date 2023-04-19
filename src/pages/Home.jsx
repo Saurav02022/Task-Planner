@@ -153,6 +153,7 @@ const Home = () => {
     dispatch,
     onClose,
     addNewSprint,
+    updateNameError,
   ]);
 
   useEffect(() => {

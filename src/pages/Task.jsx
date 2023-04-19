@@ -12,13 +12,9 @@ import {
   Box,
   Select,
   Input,
-  useToast,
   Heading,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Td,
+  Center,
+  Text,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useReducer, useState } from "react";
@@ -32,15 +28,16 @@ import {
   deletetask,
   getallTaskData,
 } from "../redux/task/action";
+import useShowToast from "../CustomHooks/UseShowToast";
 
 const backgroundColor = "#38aa8c";
 
 const Sprint = () => {
   const [dataAdd, setDataAdd] = useState(false);
   const [state, Dispatch] = useReducer(taskCreate, initialValue);
+  const [showToast] = useShowToast();
 
   const dispatch = useDispatch();
-  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { getSuccess } = useSelector((store) => store.sprintReducer);
@@ -58,31 +55,21 @@ const Sprint = () => {
     changeStatusError,
   } = useSelector((store) => store.taskReducer);
 
-  const showToast = (description, status) => {
-    toast({
-      description,
-      status,
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  };
-
   const postTask = () => {
     if (!state.taskType) {
-      showToast("Please select the Task Type", "info");
+      showToast("", "Please select the Task Type", "info");
       return;
     }
     if (!state.sprintName) {
-      showToast("Please select the sprint Name", "info");
+      showToast("", "Please select the sprint Name", "info");
       return;
     }
     if (!state.task) {
-      showToast("Please Enter the task", "info");
+      showToast("", "Please Enter the task", "info");
       return;
     }
     if (!state.statusOfTask) {
-      showToast("Please Enter the status Of the Task", "info");
+      showToast("", "Please Enter the status Of the Task", "info");
       return;
     }
 
@@ -102,20 +89,28 @@ const Sprint = () => {
   };
 
   if (createSuccess === "already task exists") {
-    showToast(createSuccess, "info");
+    showToast("",createSuccess, "info");
   }
 
   if (createSuccess === "Sprint Name does not exists") {
-    showToast(createSuccess, "info");
+    showToast("",createSuccess, "info");
   }
 
   if (createSuccess === "new task created successfully") {
-    showToast(createSuccess, "success");
+    showToast("",createSuccess, "success");
   }
 
   const deleteTask = (id) => {
     dispatch(deletetask(id));
-    showToast("task deleted successfully", "success");
+    showToast("", "task deleted successfully", "success");
+    setTimeout(() => {
+      setDataAdd(!dataAdd);
+      dispatch(ResetAllSucceess());
+    }, 1000);
+  };
+  const changeStatusOftheTask = (id, currentStatus) => {
+    dispatch(changeTaskStatus(id, currentStatus));
+    showToast("", "change status successfully", "success");
     setTimeout(() => {
       setDataAdd(!dataAdd);
       dispatch(ResetAllSucceess());
@@ -124,26 +119,26 @@ const Sprint = () => {
 
   useEffect(() => {
     if (createError) {
-      showToast(createError, "error");
+      showToast("", createError, "error");
     }
 
     if (getTaskError) {
-      showToast(getTaskError, "error");
+      showToast("", getTaskError, "error");
     }
 
     if (deleteError) {
-      showToast(deleteError, "error");
+      showToast("", deleteError, "error");
     }
 
     if (changeStatusError) {
-      showToast(changeStatusError, "error");
+      showToast("", changeStatusError, "error");
     }
-  }, [createError, getTaskError, deleteError, changeStatusError]);
+  }, [createError, getTaskError, deleteError, changeStatusError, showToast]);
 
   useEffect(() => {
     dispatch(getSprintData(userid));
     dispatch(getallTaskData(userid));
-  }, [dataAdd]);
+  }, [dataAdd, dispatch, userid]);
 
   if (getLoading || changeStatusloading) {
     return (
@@ -163,6 +158,8 @@ const Sprint = () => {
     >
       <Box>
         <Button
+          backgroundColor={backgroundColor}
+          color="white"
           onClick={onOpen}
           isDisabled={getSuccess.length > 0 ? false : true}
         >
@@ -217,11 +214,16 @@ const Sprint = () => {
             </ModalBody>
 
             <ModalFooter>
-              <Button backgroundColor={"red"} mr={3} onClick={onClose}>
+              <Button
+                colorScheme="red"
+                mr={3}
+                onClick={onClose}
+                isDisabled={createLoading}
+              >
                 Close
               </Button>
               <Button
-                backgroundColor={backgroundColor}
+                colorScheme="green"
                 onClick={postTask}
                 isLoading={createLoading}
                 loadingText="loading..."
@@ -233,85 +235,79 @@ const Sprint = () => {
         </Modal>
       </Box>
 
-      <Table>
-        <Thead>
-          <Tr>
-            <Td> S.no</Td>
-            <Td>Task Type</Td>
-            <Td>Sprint Name</Td>
-            <Td>Task</Td>
-            <Td>Status of The Task</Td>
-            <Td>Change Status of Task</Td>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {getTaskSuccess.length > 0 &&
-            getTaskSuccess.map((item, index) => {
-              return (
-                <Tr key={index}>
-                  <Td>{index + 1}</Td>
-                  <Td>{item.taskType}</Td>
-                  <Td>{item.sprintName}</Td>
-                  <Td>{item.task}</Td>
-                  <Td>{item.statusOfTask}</Td>
-                  <Td>
-                    <Select
-                      placeholder="Select status of task"
-                      onChange={(e) => {
-                        dispatch(changeTaskStatus(item._id, e.target.value));
-                        toast({
-                          description: "change Status successfully",
-                          status: "success",
-                          duration: 3000,
-                          isClosable: true,
-                          position: "top-right",
-                        });
-                        setTimeout(() => {
-                          setDataAdd(!dataAdd);
-                          dispatch(ResetAllSucceess());
-                        }, 1000);
-                      }}
+      <Box
+        display="grid"
+        gridTemplateColumns={{
+          base: "repeat(1,1fr)",
+          sm: "repeat(2,1fr)",
+          md: "repeat(3,1fr)",
+          lg: "repeat(4,1fr)",
+        }}
+        width="90%"
+        gap="10"
+        margin="auto"
+        marginTop="10"
+        marginBottom="10"
+      >
+        {getTaskSuccess.length > 0 &&
+          getTaskSuccess.map((item, index) => {
+            return (
+              <Box
+                border="1px solid #ccc"
+                key={index}
+                padding="5"
+                borderRadius="md"
+                height="300px"
+              >
+                <Center display="flex" flexDirection="column" gap="2">
+                  <Text>Task Type:- {item.taskType}</Text>
+                  <Text>Sprint Name:- {item.sprintName}</Text>
+                  <Text noOfLines={2}>Task:- {item.task}</Text>
+                  <Text>Status of the Task:- {item.statusOfTask}</Text>
+                  <Select
+                    mt="2"
+                    placeholder="Select status of task"
+                    onChange={(e) =>
+                      changeStatusOftheTask(item._id, e.target.value)
+                    }
+                  >
+                    <option
+                      value="To Do"
+                      disabled={item.statusOfTask === "To Do" ? true : false}
                     >
-                      <option
-                        value="To Do"
-                        disabled={item.statusOfTask === "To Do" ? true : false}
-                      >
-                        To Do
-                      </option>
-                      <option
-                        value="In Progress"
-                        disabled={
-                          item.statusOfTask === "In Progress" ? true : false
-                        }
-                      >
-                        In Progress
-                      </option>
-                      <option
-                        value="Completed"
-                        disabled={
-                          item.statusOfTask === "Completed" ? true : false
-                        }
-                      >
-                        Completed
-                      </option>
-                    </Select>
-                  </Td>
-                  <Td>
-                    <Button
-                      backgroundColor={backgroundColor}
-                      color="white"
-                      onClick={() => deleteTask(item._id)}
-                      isLoading={deleteLoading}
-                      loadingText="Loading..."
+                      To Do
+                    </option>
+                    <option
+                      value="In Progress"
+                      disabled={
+                        item.statusOfTask === "In Progress" ? true : false
+                      }
                     >
-                      Delete
-                    </Button>
-                  </Td>
-                </Tr>
-              );
-            })}
-        </Tbody>
-      </Table>
+                      In Progress
+                    </option>
+                    <option
+                      value="Completed"
+                      disabled={
+                        item.statusOfTask === "Completed" ? true : false
+                      }
+                    >
+                      Completed
+                    </option>
+                  </Select>
+                  <Button
+                    backgroundColor={backgroundColor}
+                    color="white"
+                    onClick={() => deleteTask(item._id)}
+                    isLoading={deleteLoading}
+                    loadingText="Loading..."
+                  >
+                    Delete
+                  </Button>
+                </Center>
+              </Box>
+            );
+          })}
+      </Box>
     </Flex>
   );
 };
