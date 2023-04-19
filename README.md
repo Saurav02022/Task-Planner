@@ -3,27 +3,16 @@
 
 Task Planner: A web app for managing tasks and sprints. Built with React, Node, and Mongo, it allows users to assign tasks, change their status, and view progress. Improve team productivity with this easy-to-use tool.
 
-## Tech Stack
-
-<h1>Frontend Dependencies</h1> <br/>
-1.create-react-app <br/>
-2.react-router-dom <br/>
-3.Chakra-ui <br/>
-4.redux <br/>
-5.redux-thunk <br/>
-6.react-icons <br/>
-7.axios <br/>
-8.chakra-ui/icons <br/>
+# Dependencies
+- create-react-app
+- react-router-dom
+- Chakra-ui
+- redux
+- redux-thunk
+- react-icons
+- axios
+- chakra-ui/icons
 <hr/>
-
-<h1>Backend Dependencies </h1> <br/>
-1. express <br/>
-2. mongoose <br/>
-3. cors <br/>
-4. dotenv <br/>
-5. jsonwebtoken <br/>
-6. bcrypt <br/>
-
 
 ## start this project on local server
 
@@ -31,11 +20,11 @@ Task Planner: A web app for managing tasks and sprints. Built with React, Node, 
   clone this repo in your local system
 ```
 ```bash
-  npm install in both folders
+  npm install
 ```
 
 ```bash
-at frontend npm run start
+npm run start
 ```
 
 ## Pages
@@ -47,14 +36,17 @@ at frontend npm run start
 
 ## responsive
 
-- 70-80 % 
+- 90-95 % 
 
 ## Functionality
 
 - signup
+- without verifing email user can't login
 - login
-- without login user can not create sprint,add tasks and can't do any CRUD operations.
+- Protected Route "/" without login You can't access this page.
 - Create Sprint
+- delete Sprint
+- change Sprint Name
 - View Particular Sprint tasks
 - Create Task
 - Change Status of Task
@@ -66,7 +58,7 @@ at frontend npm run start
 
 ![App Screenshot](https://user-images.githubusercontent.com/104342116/227706135-1165e624-f48a-463c-99e6-ad089c715922.png)
 
-![App Screenshot](https://user-images.githubusercontent.com/104342116/227706169-0a4df102-d824-4247-b445-ced0a873e978.png)
+![App Screenshot](https://user-images.githubusercontent.com/104342116/232958173-0b75b364-7b8b-4474-8d64-901eb94dd16a.png)
 
 ![App Screenshot](https://user-images.githubusercontent.com/104342116/227706230-b902b056-a7f5-47bb-a795-ff6aaa2523ce.png)
 
