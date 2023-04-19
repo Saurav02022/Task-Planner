@@ -31,7 +31,7 @@ import {
   createtask,
   deletetask,
   getallTaskData,
-} from "../redux/task.js/action";
+} from "../redux/task/action";
 
 const backgroundColor = "#38aa8c";
 

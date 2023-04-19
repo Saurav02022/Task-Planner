@@ -39,8 +39,8 @@ export default function Login() {
     }
     if (!state.email.includes("@") || state.email.includes("@@") === true) {
       showToast(
-        "Please Enter valid email address",
-        "Please enter your email address",
+        "Please Enter valid Email address",
+        "Please enter your Email address",
         "info"
       );
       return;
@@ -54,21 +54,27 @@ export default function Login() {
 
   useEffect(() => {
     switch (loginSuccess) {
-      case "User not found":
+      case "Email Address not found Please Sign Up":
         showToast(
           "Your account is not available",
-          "Please signup on our website",
+          "Please signup on Our Website",
           "info"
         );
         navigate("/signup");
         Dispatch(resetReduxData());
         break;
-      case "Please Verify your email address":
+      case "Please Verify Your Email Address":
         showToast(
-          "Verify your email address",
-          "Please Verify your email address",
+          "Verify your Email Address",
+          "Please Verify Your Email Address",
           "info"
         );
+        dispatch({ type: "email", payload: "" });
+        dispatch({ type: "password", payload: "" });
+        Dispatch(resetReduxData());
+        break;
+      case "Error while Comparing the password":
+        showToast("", "Error while Comparing the password", "error");
         dispatch({ type: "email", payload: "" });
         dispatch({ type: "password", payload: "" });
         Dispatch(resetReduxData());
@@ -88,7 +94,7 @@ export default function Login() {
           showToast("Login error", loginError, "error");
         }
     }
-  }, [loginSuccess, loginError]);
+  }, [loginSuccess, loginError, showToast, navigate, Dispatch]);
 
   return (
     <Flex

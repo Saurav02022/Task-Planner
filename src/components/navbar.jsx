@@ -190,7 +190,7 @@ function Navbar() {
         <Center
           pb={4}
           display={{ md: "none" }}
-          border="1px solid red"
+          border="0px solid red"
           textAlign="center"
         >
           {isAuth && <Text fontSize="lg">Welcome {firstName}</Text>}

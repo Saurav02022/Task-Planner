@@ -87,7 +87,7 @@ export default function Signup() {
       Dispatch(resetReduxData());
       navigate("/login");
     }
-  }, [signupError, signupSuccess]);
+  }, [Dispatch, navigate, showToast, signupError, signupSuccess]);
 
   return (
     <Flex
