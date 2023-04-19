@@ -10,6 +10,10 @@ const sprintDeleteLoading = "sprint/delete/loading";
 const sprintDeleteSuccess = "sprint/delete/success";
 const sprintDeleteError = "sprint/delete/error";
 
+const sprintNameChangeLoading = "sprint/name/change/loading";
+const sprintNameChangeSuccess = "sprint/name/change/success";
+const sprintNameChangeError = "sprint/name/change/error";
+
 export {
   sprintCreateLoading,
   sprintCreateSuccess,
@@ -20,4 +24,7 @@ export {
   sprintDeleteLoading,
   sprintDeleteSuccess,
   sprintDeleteError,
+  sprintNameChangeLoading,
+  sprintNameChangeSuccess,
+  sprintNameChangeError,
 };

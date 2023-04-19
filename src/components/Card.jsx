@@ -45,7 +45,7 @@ const Card = ({ sprintName, link, index, creatorId }) => {
       </Flex>
 
       {renderUpdateSprintComponent ? (
-        <UpdateSprint currentSprintName={sprintName} />
+        <UpdateSprint currentSprintName={sprintName} creatorId={creatorId} />
       ) : null}
     </Center>
   );

@@ -8,6 +8,9 @@ import {
   sprintDeleteLoading,
   sprintDeleteSuccess,
   sprintDeleteError,
+  sprintNameChangeLoading,
+  sprintNameChangeSuccess,
+  sprintNameChangeError,
 } from "./actionType";
 
 import axios from "axios";
@@ -67,3 +70,23 @@ export const ResetAllSucceess = () => (dispatch) => {
     console.log(e.message);
   }
 };
+
+/*
+--> update a particular sprint name
+   -> if sprintName update happen then tasks should also change their sprint name at that same time. 
+*/
+export const updateName =
+  (currentSprintName, creatorId, updatedName) => async (dispatch) => {
+    dispatch({ type: sprintNameChangeLoading });
+    try {
+      await axios
+        .patch(
+          `https://cautious-pink-flannel-nightgown.cyclic.app/sprint/update/${currentSprintName}/${creatorId}/${updatedName}`
+        )
+        .then((res) => {
+          dispatch({ type: sprintNameChangeSuccess, payload: res.data });
+        });
+    } catch (error) {
+      dispatch({ type: sprintNameChangeError, payload: error });
+    }
+  };

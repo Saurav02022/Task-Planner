@@ -47,6 +47,8 @@ const Home = () => {
     deleteLoading,
     deleteSuccess,
     deleteError,
+    updateNameLoading,
+    updateNameError,
   } = useSelector((store) => store.sprintReducer);
 
   const createNewSprintBtn = () => {
@@ -69,6 +71,15 @@ const Home = () => {
   };
 
   useEffect(() => {
+    if (updateNameError) {
+      toast({
+        description: updateNameError,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     if (createSuccess === "already sprint exists") {
       toast({
         description: createSuccess,
@@ -132,11 +143,21 @@ const Home = () => {
         position: "top-right",
       });
     }
-  }, [createSuccess, createError, getError, deleteError, deleteSuccess]);
+  }, [
+    createSuccess,
+    createError,
+    getError,
+    deleteError,
+    deleteSuccess,
+    toast,
+    dispatch,
+    onClose,
+    addNewSprint,
+  ]);
 
   useEffect(() => {
     dispatch(getSprintData(userid));
-  }, [addNewSprint, deleteSuccess]);
+  }, [addNewSprint, deleteSuccess, dispatch, updateNameLoading, userid]);
 
   if (getLoading) {
     return (
@@ -152,6 +173,15 @@ const Home = () => {
       </Heading>
     );
   }
+
+  if (updateNameLoading) {
+    return (
+      <Heading as="h2" textAlign="center">
+        Loading...
+      </Heading>
+    );
+  }
+
   return (
     <Flex justifyContent="center" flexDirection="column" textAlign="center">
       <Box marginTop="50px">
